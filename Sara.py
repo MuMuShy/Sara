@@ -12,6 +12,7 @@ import requests
 from time import ctime
 import time
 import pyttsx3
+import dlib
 import cv2
 import imutils
 from bs4 import BeautifulSoup
@@ -37,7 +38,6 @@ def CreatGUI():
         talk=talk.lower()
         for t in SaraCommandDict.keys():
             if re.findall(t,talk):
-                print('aksldflkj')
                 exec(SaraCommandDict[t][0])
                 SpeakChinese(SaraCommandDict[t][1])
             else:
@@ -45,7 +45,10 @@ def CreatGUI():
     #爬取學校網站資料 獲得各科目公佈欄是否有公告
     def ConnectIlearnBroadCast():
         session = requests.Session()
-        data = {'username': 'd0441258', 'password': 'MuMuShy850421'}
+        account=input('請輸入帳號:')
+        password=input('請輸入密碼:')
+        SpeakChinese('請稍等')
+        data = {'username': account, 'password': password}
         r = session.post('https://ilearn2.fcu.edu.tw/login/index.php', data=data)
         print(r.cookies.get_dict())
         r = session.get("https://ilearn2.fcu.edu.tw/")
@@ -74,11 +77,6 @@ def CreatGUI():
         time.sleep(6)
         SpeakChinese('請趕快登入網站查詢')
         time.sleep(2)
-        SpeakChinese('需要幫你打開ilearn嗎')
-        time.sleep(2)
-        data=Listen()
-        if "yes" in data or "好" in data:
-            SaraWeb.openWithURL('https://ilearn2.fcu.edu.tw/')
     #sara的耳朵
     def Listen():
         print('sara is listening...')
@@ -145,7 +143,7 @@ def CreatGUI():
             time.sleep(1)
             SearchingWeather()
         if "公告" in data:
-            Speak('I will Help You To Check Please Wait....')
+            SpeakChinese('請給我你的ilearn帳號密碼')
             ConnectIlearnBroadCast()
         if "時間" in data:
             Speak(ctime())
@@ -160,8 +158,6 @@ def CreatGUI():
             os._exit(0)
         if "school" in data:
             ConnectIlearnBroadCast()
-        if "打開" in data or "學校網頁" in data:
-            SaraWeb.openWithURL('https://ilearn2.fcu.edu.tw/')
     #查詢台中天氣
     def SearchingWeather():
         r = requests.get('https://www.cwb.gov.tw/V7/forecast/taiwan/Taichung_City.htm')
@@ -248,27 +244,6 @@ def main():
     CreatGUI()
 if __name__ == '__main__':
     main()
-
-
-# In[2]:
-
-
-def ReadAllComand():
-    from openpyxl import load_workbook
-    wb=load_workbook('Sara指令表/Sara指令表.xlsx')
-    ws=wb.get_active_sheet()
-    print(ws.max_row)
-    print(ws.max_column)
-    for column in ws.columns:
-        for cell in column:
-            print(cell.value)
-ReadAllComand()
-
-
-# In[2]:
-
-
-
 
 
 # In[ ]:
