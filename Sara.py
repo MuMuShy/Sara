@@ -12,7 +12,6 @@ import requests
 from time import ctime
 import time
 import pyttsx3
-import dlib
 import cv2
 import imutils
 from bs4 import BeautifulSoup
@@ -38,6 +37,7 @@ def CreatGUI():
         talk=talk.lower()
         for t in SaraCommandDict.keys():
             if re.findall(t,talk):
+                print('aksldflkj')
                 exec(SaraCommandDict[t][0])
                 SpeakChinese(SaraCommandDict[t][1])
             else:

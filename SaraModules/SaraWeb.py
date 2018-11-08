@@ -16,10 +16,11 @@ def __init__(self):
     if platform.system()==Darwin:
         chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
     if platform.system()==Windows:
-        chrome_path='C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+        chrome_path='C:/Program Files(x86)/Google/Chrome/Application/chrome.exe %s'
 def openWithURL():
+    print('laksdlfj')
     url=input()
-    webbrowser.get(chrome_path).open(url)
+    webbrowser.open(url)
 
 
 
