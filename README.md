@@ -11,6 +11,7 @@
 
 如何開發Sara功能:
 我們定義好與Sara的接口(SaraModules,Sara指令表)
+
 1.直接撰寫module 範例(SaraModules/SaraWeb.py)即是一個簡單的python開啟網頁的功能
 撰寫好後將檔案放入SaraModules下資料夾下,並將模組名稱加入(SaraModules/__init.py__)打開此檔案會看到__all__=[]
 請將你的模組名稱加入進來(參考"SaraWeb.py") Sara就會在執行時Import你的模組
