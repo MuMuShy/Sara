@@ -5,18 +5,23 @@
 =
 1.需安裝python環境(python3)
 
-2.於目錄下執行python3 Sara.py即可 ![](Saratitle.png)
+2.於目錄下執行python3 Sara.py即可 ![](pngs/Saratitle.png)
 
-3.可以從文字輸入區域輸入指令or要對Sara說的話 ![](input.png) 
+
+3.可以從文字輸入區域輸入指令or要對Sara說的話 ![](pngs/input.png) 
+
 
 4.Sara會自動依照他的ai去做回應 如果有相關指令可能會需要使用者輸入資訊 無指令的話會依照ai去回應你
 (通常都是亂喇賽)
 
-Ex我請Sara幫我查詢維基百科 Sara收到指令後會詢問你要查詢什麼 ![](Getcommand.png)
 
-於小黑窗or小白窗輸入![](Searching.png)
+Ex我請Sara幫我查詢維基百科 Sara收到指令後會詢問你要查詢什麼 ![](pngs/Getcommand.png)
 
-Sara獲得的結果會顯示在這 ![](SaraResult.png)
+
+於小黑窗or小白窗輸入![](pngs/Searching.png)
+
+
+Sara獲得的結果會顯示在這 ![](pngs/SaraResult.png)
 
 
 
@@ -43,7 +48,7 @@ Sara獲得的結果會顯示在這 ![](SaraResult.png)
 >>__init.py__
 
 
-打開init.py會看到![](init.py.png)
+打開init.py會看到![](pngs/init.py.png)
 
 
 請將你的模組名稱加入進來(參考"SaraWeb") Sara就會在執行時Import你的模組
@@ -75,7 +80,7 @@ Callback (Sara執行完後會說的話）
 
 對應:
 
-![](xml.png)
+![](pngs/xml.png)
 
 將指令輸入後即可成功擴充Sara的功能啦!
               
