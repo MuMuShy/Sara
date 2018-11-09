@@ -161,10 +161,6 @@ def CreatGUI():
     def test():
         print('button test')
     def SaraMainLoop():
-        if(mixer.music.get_busy()):
-            print('')
-        else:
-            print('sara is not talking')
         window.after(1000, SaraMainLoop)
     #退出程序
     def on_closing():
