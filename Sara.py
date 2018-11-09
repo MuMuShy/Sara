@@ -23,6 +23,7 @@ from PIL import ImageTk
 from pprint import pprint
 import re
 from SaraModules import *
+#Sara指令表
 def ReadAllCommand():
     from openpyxl import load_workbook
     wb=load_workbook('Sara指令表/Sara指令表.xlsx')
@@ -31,52 +32,40 @@ def ReadAllCommand():
     for i in range(2,ws.max_column+1):
         SaraCommandDict[ws.cell(row=1,column=i).value]=[ws.cell(row=3,column=i).value,ws.cell(row=4,column=i).value]
     return SaraCommandDict
+#Sara的喇賽聊天機器模組
+class SaraChat():
+    def getChatterbot(self):
+        from chatterbot import ChatBot
+        chatbot=ChatBot('Sara',trainer = 'chatterbot.trainers.ChatterBotCorpusTrainer')
+        # 載入(簡體)中文的問候語言庫
+        chatbot.train("chatterbot.corpus.chinese.greetings")
+        # 載入(簡體)中文的對話語言庫
+        chatbot.train("chatterbot.corpus.chinese.conversations")
+        return chatbot
 #Sara 的本體
 def CreatGUI():
+    #讀取所有指令檔
     SaraCommandDict=ReadAllCommand()
+    #載入Chatbot
+    SaraChatterBot=SaraChat()
+    SaraChatterBot=SaraChatterBot.getChatterbot()
     def SearchCommand(talk):
         talk=talk.lower()
+        print(talk)
         for t in SaraCommandDict.keys():
             if re.findall(t,talk):
+                SpeakChinese('收到指令 開始執行...')
+                time.sleep(2)
+                #執行excel下的指令
                 exec(SaraCommandDict[t][0])
+                #講出callback
                 SpeakChinese(SaraCommandDict[t][1])
-            else:
-                print('no command')
-    #爬取學校網站資料 獲得各科目公佈欄是否有公告
-    def ConnectIlearnBroadCast():
-        session = requests.Session()
-        account=input('請輸入帳號:')
-        password=input('請輸入密碼:')
-        SpeakChinese('請稍等')
-        data = {'username': account, 'password': password}
-        r = session.post('https://ilearn2.fcu.edu.tw/login/index.php', data=data)
-        print(r.cookies.get_dict())
-        r = session.get("https://ilearn2.fcu.edu.tw/")
-        soup = BeautifulSoup(r.text,'lxml')
-        allClass=soup.find_all("a",title = re.compile(r'^1071(\w+)'))
-        say=""
-        for ul in allClass:
-            print(ul['href'])
-            r=session.get(ul['href'])
-            soup=BeautifulSoup(r.text,'lxml')
-            subjectName=soup.find("h1",{"class":"coursetitle"})
-            subjectName=subjectName.text[5:-6]
-            print(subjectName)
-            broadcastURL=soup.find_all("a", href=re.compile(r"^https://ilearn2.fcu.edu.tw/mod/forum/view.php?(\w+)"))
-            r=session.get(broadcastURL[2]['href'])
-            soup=BeautifulSoup(r.content,'lxml')
-            result=soup.find(class_="forumheaderlist")
-            if result==None:
-                print("no new broadcast")
-            else:
-                print(result)
-                say+=subjectName
-        SpeakChinese('以下科目有新的公告:')
-        time.sleep(3)
-        SpeakChinese(say)
-        time.sleep(6)
-        SpeakChinese('請趕快登入網站查詢')
-        time.sleep(2)
+                time.sleep(2)
+                return
+        #沒有指令 喇賽
+        data=SaraChatterBot.get_response(talk)
+        SpeakChinese(data)
+        print(data)
     #sara的耳朵
     def Listen():
         print('sara is listening...')
@@ -117,16 +106,9 @@ def CreatGUI():
             mixer.music.load("{}.mp3".format(fp.name))
             mixer.music.play()
             SetSaraText(sentence)
-
-    #爬取維基百科
-    def SearchWiki(term):
-        res=requests.get('https://zh.wikipedia.org/wiki/{}'.format(term))
-        soup=BeautifulSoup(res.text,'lxml')
-        result=soup.select_one('.mw-parser-output p').text
-        print(result)
-        return result
     def Speak2(sentence):
-        engine = pyttsx3.init()
+        mixer.init()
+        engine = mixer.init()
         rate = engine.getProperty('rate')
         engine.setProperty('rate', rate)
         voices = engine.getProperty('voices')
@@ -138,13 +120,6 @@ def CreatGUI():
         #data=Listen()
         if(data==""):
             return
-        if "天氣" in data:
-            Speak('Searching Taichung weather... ')
-            time.sleep(1)
-            SearchingWeather()
-        if "公告" in data:
-            SpeakChinese('請給我你的ilearn帳號密碼')
-            ConnectIlearnBroadCast()
         if "時間" in data:
             Speak(ctime())
         if "time" in data:
@@ -158,17 +133,6 @@ def CreatGUI():
             os._exit(0)
         if "school" in data:
             ConnectIlearnBroadCast()
-    #查詢台中天氣
-    def SearchingWeather():
-        r = requests.get('https://www.cwb.gov.tw/V7/forecast/taiwan/Taichung_City.htm')
-        soup=BeautifulSoup(r.content,'lxml')
-        result=soup.find_all("td")
-        speak="台中天氣"
-        print(result[2].text)
-        print(result[6].text)
-        print(result[10].text)
-        speak="台中天氣 今晚至明晨"+result[2].text+" 明天白天"+result[6].text+" 明天晚上"+result[10].text
-        SpeakChinese(speak)
     #當視窗被關注 被調用(問候)
     def Onfocus(event):
         first=False
@@ -185,8 +149,7 @@ def CreatGUI():
                 first=True
     #sara 使用者文字輸入接口
     def SaraByText():
-        command=UserEntry.get()
-        
+        command=UserEntry.get()        
     def SetSaraText(saratext):
         canvas.delete('SaraText')
         canvas.create_text(400,100,fill="white",font="Times 30 italic bold",text=saratext,tag='SaraText')
@@ -225,7 +188,7 @@ def CreatGUI():
     UserEntry=tk.Entry(window)
     UserEntry.pack(padx=100,pady=0)
     #使用者輸入按鈕
-    UserInputbutton=tk.Button(window,text="輸入",width=10,height=2,command=lambda:Sara(UserEntry.get()))
+    UserInputbutton=tk.Button(window,text="輸入",width=10,height=2,command=lambda:SearchCommand(UserEntry.get()))
     UserInputbutton.pack(padx=50,pady=0)
     #使用者說話按鈕
     UserSaybutton=tk.Button(window,text='說話',width=10,height=2,command=lambda:Sara(Listen()))
@@ -244,6 +207,12 @@ def main():
     CreatGUI()
 if __name__ == '__main__':
     main()
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
