@@ -3,7 +3,7 @@
 
  使用方法:
 =
-1.需安裝python環境(python3)
+1.需安裝python環境(python3) 並下載相關模組(噴no moduleError的話就按照需要下載安裝模組 pip3 install...)
 
 2.於目錄下執行python3 Sara.py即可 ![](pngs/Saratitle.png)
 
