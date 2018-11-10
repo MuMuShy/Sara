@@ -8,12 +8,17 @@ import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import re
-
+import platform    
 def recommendation():
-    food = input('欲查詢食譜:')
+    platformstr=""
+    platformstr=str(platform.system())
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    driver = webdriver.Chrome("./chromedriver",chrome_options=options)
+    if platformstr=="Darwin":
+        driver = webdriver.Chrome("./chromedriver",chrome_options=options)
+    else:
+        driver = webdriver.Chrome(chrome_options=options)
+    food = input('欲查詢食譜:')
     driver.get("https://icook.tw/")
     driver.find_element_by_name("q").click()
     driver.find_element_by_name("q").clear()

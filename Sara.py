@@ -81,7 +81,6 @@ def CreatGUI():
             SetIText('無法辨識 請再說一遍')
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
-        SetIText(data)
         return data
     #Sara說英文
     def callback():
@@ -136,17 +135,11 @@ def CreatGUI():
         SaraCanvas.delete('SaraText')
         SaraCanvas.create_text((10,20),text=saratext,anchor="w",fill="white",tag='SaraText')
         SaraCanvas.update()
-    def SetIText(Itext):
-        canvas.delete('Isay')
-        canvas.create_text(100,50,fill="white",font="Times 20 italic bold",text=Itext,tag='Isay')
-        canvas.update()
     def test():
         print('button test')
     def SaraMainLoop():
         if(mixer.music.get_busy()):
             print('')
-        else:
-            print('sara is not talking')
         window.after(1000, SaraMainLoop)
     #退出程序
     def on_closing():
@@ -163,7 +156,6 @@ def CreatGUI():
     photoImg = ImageTk.PhotoImage(img)
     canvas.create_image(0,0, image=photoImg,anchor='nw')
     master=window
-    canvas.create_text(100,50,fill="white",font="Times 20 italic bold",text="",tag='Isay')
     canvas.pack()
     #使用者文本輸入
     UserEntry=tk.Entry(window)
