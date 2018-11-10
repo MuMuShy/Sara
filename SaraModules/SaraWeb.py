@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[5]:
+# In[81]:
 
 
 import webbrowser
@@ -71,6 +71,22 @@ def SearchWiki():
     soup=BeautifulSoup(res.text,'lxml')
     result=soup.select_one('.mw-parser-output p').text
     print(result)
+#星座運勢
+def constellationLuck():
+    choose=input("請問你的星座是？(1)牡羊 (2)金牛 (3)雙子 (4)巨蟹 (5)獅子 (6)處女 (7)天秤 (8)天蠍 (9)射手 (10)摩羯 (11)水瓶 (12)雙魚)")
+    r=requests.get('https://m.click108.com.tw/astro/index.php?astroNum='+choose)
+    soup=BeautifulSoup(r.content,'lxml')
+    dayluktitle=soup.find(id='astroDailyWording')
+    print('今日運勢:'+dayluktitle.text)
+    dayloveluk=soup.find(id='astroDailyData_love')
+    print('愛情運:'+dayloveluk.text)
+#電影推薦
+def MovieRecommand():
+    r=requests.get('https://movies.yahoo.com.tw/movie_intheaters.html')
+    soup=BeautifulSoup(r.content,'lxml')
+    result=soup.find("ul",{"class":"ranking_list_r"})
+    print("以下是我推薦的電影 :")
+    print(result.text.replace("\n",""))
 
 
 # In[ ]:
