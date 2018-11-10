@@ -13,7 +13,7 @@ def recommendation():
     food = input('欲查詢食譜:')
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    driver = webdriver.Chrome(chrome_options=options)
+    driver = webdriver.Chrome("./chromedriver",chrome_options=options)
     driver.get("https://icook.tw/")
     driver.find_element_by_name("q").click()
     driver.find_element_by_name("q").clear()
