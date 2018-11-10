@@ -12,8 +12,6 @@ import requests
 from time import ctime
 import time
 import pyttsx3
-import dlib
-import cv2
 import imutils
 from bs4 import BeautifulSoup
 import tkinter as tk
