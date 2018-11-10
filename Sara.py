@@ -54,7 +54,7 @@ def CreatGUI():
         print(talk)
         for t in SaraCommandDict.keys():
             if re.findall(t,talk):
-                SpeakChinese('收到指令 開始執行...')
+                SpeakChinese('好的 請稍等呦')
                 time.sleep(2)
                 #執行excel下的指令
                 exec(SaraCommandDict[t][0])
@@ -77,7 +77,6 @@ def CreatGUI():
         #開始語音辨識
         try:
             data=r.recognize_google(audio,language='zh-TW')
-            SearchCommand(data)
             print("you said"+data)
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
@@ -117,22 +116,7 @@ def CreatGUI():
         engine.runAndWait()
     #Sara的大腦
     def Sara(data):
-        #data=Listen()
-        if(data==""):
-            return
-        if "時間" in data:
-            Speak(ctime())
-        if "time" in data:
-            Speak(ctime())
-        if "百科" in data:
-            Speak("what do you want to search?")
-            Searching=Listen()
-            SpeakChinese(SearchWiki(Searching))  
-        if "再見" in data:
-            Speak('Goodbye nice to meet you')
-            os._exit(0)
-        if "school" in data:
-            ConnectIlearnBroadCast()
+        SearchCommand(data)
     #當視窗被關注 被調用(問候)
     def Onfocus(event):
         first=False
@@ -151,16 +135,20 @@ def CreatGUI():
     def SaraByText():
         command=UserEntry.get()        
     def SetSaraText(saratext):
-        canvas.delete('SaraText')
-        canvas.create_text(400,100,fill="white",font="Times 30 italic bold",text=saratext,tag='SaraText')
-        canvas.update()
+        SaraCanvas.delete('SaraText')
+        SaraCanvas.create_text((10,20),text=saratext,anchor="w",fill="white",tag='SaraText')
+        SaraCanvas.update()
     def SetIText(Itext):
         canvas.delete('Isay')
-        canvas.create_text(400,500,fill="white",font="Times 20 italic bold",text=Itext,tag='Isay')
+        canvas.create_text(100,50,fill="white",font="Times 20 italic bold",text=Itext,tag='Isay')
         canvas.update()
     def test():
         print('button test')
     def SaraMainLoop():
+        if(mixer.music.get_busy()):
+            print('')
+        else:
+            print('sara is not talking')
         window.after(1000, SaraMainLoop)
     #退出程序
     def on_closing():
@@ -169,26 +157,29 @@ def CreatGUI():
     #創建Tk window
     window=tk.Tk()
     window.title('Sara')
-    window.geometry('800x600')
+    window.geometry('400x400')
     #創建canvas並設置背景圖
-    canvas=tk.Canvas(window,height=400,width=800)
+    canvas=tk.Canvas(window,height=200,width=400)
     img = Image.open("sara.jpg")
-    img = img.resize((800,600), Image.ANTIALIAS)
-    photoImg =  ImageTk.PhotoImage(img)
+    img = img.resize((400,200), Image.ANTIALIAS)
+    photoImg = ImageTk.PhotoImage(img)
     canvas.create_image(0,0, image=photoImg,anchor='nw')
     master=window
-    canvas.create_text(50,500,fill="white",font="Times 40 italic bold",text="",tag='SaraText')
-    canvas.create_text(50,600,fill="white",font="Times 20 italic bold",text="",tag='Isay')
+    canvas.create_text(100,50,fill="white",font="Times 20 italic bold",text="",tag='Isay')
     canvas.pack()
     #使用者文本輸入
     UserEntry=tk.Entry(window)
     UserEntry.pack(padx=100,pady=0)
     #使用者輸入按鈕
     UserInputbutton=tk.Button(window,text="輸入",width=10,height=2,command=lambda:SearchCommand(UserEntry.get()))
-    UserInputbutton.pack(padx=50,pady=0)
+    UserInputbutton.pack(padx=0,pady=0)
     #使用者說話按鈕
     UserSaybutton=tk.Button(window,text='說話',width=10,height=2,command=lambda:Sara(Listen()))
-    UserSaybutton.pack(padx=100,pady=30)
+    UserSaybutton.pack(padx=0,pady=20)
+    #創建Sara回話Canvas
+    SaraCanvas=tk.Canvas(window,height=300,width=400,bg="black")
+    SaraCanvas.create_text((10,20),text="Sara: hi i am sara ha ha",anchor="w",fill="white",tag='SaraText')
+    SaraCanvas.pack()
     #綁定event
     window.bind("<FocusIn>", Onfocus)
     window.protocol("WM_DELETE_WINDOW", on_closing)
