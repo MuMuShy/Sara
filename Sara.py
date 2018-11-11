@@ -62,7 +62,9 @@ def CreatGUI():
                 return
         #沒有指令 喇賽
         data=SaraChatterBot.get_response(talk)
-        SpeakChinese(data)
+        str(data)
+        if data:
+            SpeakChinese(data)
         print(data)
     #sara的耳朵
     def Listen():
