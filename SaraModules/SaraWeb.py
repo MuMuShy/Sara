@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from SaraModules import SaraSpeak
+from SaraModules import SaraListen
 import time
 # MacOS
 chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
@@ -105,14 +106,27 @@ def MovieRecommand():
 def ListenMusic():
     import youtube_dl
     SaraSpeak.SpeakChinese('請問你要聽什麼音樂')
-    searchMusic=input('請問你想聽什麼音樂?')
-    url='https://www.youtube.com/results?search_query='+searchMusic
-    print(url)
-    r=requests.get(url)
-    soup=BeautifulSoup(r.content,'lxml')
-    downloadTarget=soup.select('h3')[3].select('a')[0]['href']
-    url="https://www.youtube.com"+downloadTarget
-    openURL(url)
+    time.sleep(1)
+    print('請問你要聽什麼音樂?')
+    User_Saymusic=SaraListen.Listen()
+    if User_Saymusic:
+        url='https://www.youtube.com/results?search_query='+User_Saymusic
+        print(url)
+        r=requests.get(url)
+        soup=BeautifulSoup(r.content,'lxml')
+        downloadTarget=soup.select('h3')[3].select('a')[0]['href']
+        url="https://www.youtube.com"+downloadTarget
+        openURL(url)
+    else:
+        SaraSpeak.SpeakChinese('不好意思我聽不懂 你可以輸入給我嗎')
+        searchMusic=input('請問你想聽什麼音樂?')
+        url='https://www.youtube.com/results?search_query='+searchMusic
+        print(url)
+        r=requests.get(url)
+        soup=BeautifulSoup(r.content,'lxml')
+        downloadTarget=soup.select('h3')[3].select('a')[0]['href']
+        url="https://www.youtube.com"+downloadTarget
+        openURL(url)
 
 
 # In[ ]:

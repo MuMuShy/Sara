@@ -2,8 +2,6 @@
 # coding: utf-8
 
 # In[ ]:
-
-
 import speech_recognition as sr
 import tempfile
 from gtts import gTTS
@@ -11,7 +9,6 @@ from pygame import mixer
 import requests
 from time import ctime
 import time
-import pyttsx3
 import imutils
 from bs4 import BeautifulSoup
 import tkinter as tk
@@ -52,8 +49,7 @@ def CreatGUI():
         print(talk)
         for t in SaraCommandDict.keys():
             if re.findall(t,talk):
-                SpeakChinese('好的 請稍等呦')
-                time.sleep(2)
+                time.sleep(1)
                 #執行excel下的指令
                 exec(SaraCommandDict[t][0])
                 #講出callback
@@ -85,8 +81,6 @@ def CreatGUI():
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
         return data
     #Sara說英文
-    def callback():
-        print('a')
     def Speak(sentence):
         mixer.init()
         with tempfile.NamedTemporaryFile(delete=True)as fp:
@@ -104,6 +98,7 @@ def CreatGUI():
             mixer.music.load("{}.mp3".format(fp.name))
             mixer.music.play()
             SetSaraText(sentence)
+    # this is not work
     def Speak2(sentence):
         mixer.init()
         engine = mixer.init()
